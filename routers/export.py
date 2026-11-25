@@ -9,7 +9,6 @@ from urllib.parse import quote
 from fastapi import APIRouter, Depends, Response
 
 from routers.deps import get_completed_job
-from services.auth import require_auth
 from services.export_service import (
     build_docx,
     build_json,
@@ -18,7 +17,7 @@ from services.export_service import (
 )
 from services.store import Job
 
-router = APIRouter(tags=["Export"], dependencies=[Depends(require_auth)])
+router = APIRouter(tags=["Export"])
 
 TXT_MEDIA_TYPE = "text/plain; charset=utf-8"
 JSON_MEDIA_TYPE = "application/json"

@@ -6,10 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from routers.deps import get_job, to_job_status_response, to_job_summary
 from schemas.jobs import JobListResponse, JobStatus, JobStatusResponse
-from services.auth import require_auth
 from services.store import Job, store
 
-router = APIRouter(tags=["Jobs"], dependencies=[Depends(require_auth)])
+router = APIRouter(tags=["Jobs"])
 
 
 @router.get(

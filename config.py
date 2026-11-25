@@ -28,10 +28,6 @@ class Settings:
     """Application settings."""
 
     def __init__(self) -> None:
-        # Bearer token expected by the API. When unset, any Bearer token is
-        # accepted (handy for local development); set it in production.
-        self.api_token: str | None = os.getenv("API_TOKEN") or None
-
         self.storage_dir: Path = self._resolve_storage_dir(
             os.getenv("STORAGE_DIR", "storage")
         )

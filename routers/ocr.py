@@ -23,7 +23,6 @@ from routers.deps import get_finished_job, to_job_response, to_ocr_result
 from schemas.jobs import JobResponse
 from schemas.ocr import BlockResponse, OCRResult, TableResponse
 from schemas.requests import OCRBase64Request, OCRUrlRequest
-from services.auth import require_auth
 from services.ocr_service import process_job
 from services.storage import remove_job_files, save_bytes, save_upload
 from services.store import Job, new_job_id, store
@@ -34,7 +33,7 @@ from services.validators import (
     validate_upload,
 )
 
-router = APIRouter(tags=["OCR"], dependencies=[Depends(require_auth)])
+router = APIRouter(tags=["OCR"])
 
 EngineName = Literal["paddleocr", "tesseract", "azure"]
 

@@ -30,7 +30,6 @@ OCRAPI/
 │   └── requests.py          # /ocr/url、/ocr/base64 的 Pydantic v2 request model
 ├── services/
 │   ├── __init__.py
-│   ├── auth.py              # BearerAuth（OpenAPI security scheme）
 │   ├── callback.py          # callback_url 完成通知
 │   ├── export_service.py    # TXT / JSON / DOCX / 可搜尋 PDF 產生
 │   ├── fetcher.py           # /ocr/url 遠端圖片下載與驗證
@@ -53,7 +52,7 @@ OCRAPI/
 docker compose up --build
 # 或
 docker build -t ocr-api .
-docker run --rm -p 8000:8000 -e API_TOKEN=secret ocr-api
+docker run --rm -p 8000:8000 ocr-api
 ```
 
 Swagger UI：<http://localhost:8000/docs>
@@ -75,7 +74,6 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1
 
 | 變數 | 預設值 | 說明 |
 | --- | --- | --- |
-| `API_TOKEN` | （未設定） | 設定後 Bearer token 必須相符；未設定時任何非空 Bearer token 都接受（開發用） |
 | `STORAGE_DIR` | `./storage` | 上傳檔與暫存檔目錄 |
 | `DEFAULT_OCR_LANGUAGE` | `eng` | 未指定 language 或語言包不存在時的預設語言 |
 | `DEFAULT_OCR_ENGINE` | `tesseract` | 未指定 engine 時的預設值 |
@@ -108,6 +106,8 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1
 建立 job 一律回傳 `202 Accepted` 與 `JobResponse`（`job_id`、`status`、`created_at`），
 之後以 `GET /ocr/jobs/{jobId}` 輪詢，`status` 為 `completed` 或 `failed` 後可取得結果。
 
+此部署未啟用驗證：所有端點皆可直接呼叫（已依需求移除 `openai.yaml` 的 BearerAuth 要求）。
+
 `/ocr/base64` 在 `openai.yaml` 未宣告 response body，本實作爲了讓 client 能取得
 `job_id` 輪詢，回傳與其他建立端點相同的 `JobResponse`（僅新增內容，未變更既有契約）。
 
@@ -115,16 +115,13 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1
 
 ```bash
 curl -X POST http://localhost:8000/ocr/jobs \
-  -H "Authorization: Bearer secret" \
   -F "file=@sample.png" \
   -F "language=chi_tra" \
   -F "detect_table=true"
 
-curl -H "Authorization: Bearer secret" \
-  http://localhost:8000/ocr/jobs/<job_id>/result
+curl http://localhost:8000/ocr/jobs/<job_id>/result
 
-curl -OJ -H "Authorization: Bearer secret" \
-  http://localhost:8000/ocr/jobs/<job_id>/export/pdf
+curl -OJ http://localhost:8000/ocr/jobs/<job_id>/export/pdf
 ```
 
 ## 輸入驗證

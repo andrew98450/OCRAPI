@@ -4,7 +4,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      API_TOKEN: "${API_TOKEN:-}"
       STORAGE_DIR: /app/storage
       DEFAULT_OCR_LANGUAGE: "${DEFAULT_OCR_LANGUAGE:-eng}"
       JOB_TTL_SECONDS: "${JOB_TTL_SECONDS:-86400}"
