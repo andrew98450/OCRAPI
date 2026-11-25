@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.git/
+.gitignore
+storage/
+tests/
+*.md
+!README.md
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+docker-compose.yml

@@ -1,0 +1,18 @@
+services:
+  ocr-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      API_TOKEN: "${API_TOKEN:-}"
+      STORAGE_DIR: /app/storage
+      DEFAULT_OCR_LANGUAGE: "${DEFAULT_OCR_LANGUAGE:-eng}"
+      JOB_TTL_SECONDS: "${JOB_TTL_SECONDS:-86400}"
+      PDF_DPI: "${PDF_DPI:-200}"
+      MAX_PDF_PAGES: "${MAX_PDF_PAGES:-100}"
+    volumes:
+      - ocr-storage:/app/storage
+    restart: unless-stopped
+
+volumes:
+  ocr-storage:
